@@ -34,8 +34,7 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
         with:
-          # For pushing and PR we want to use a PAT with write access.
-          persist-credentials: false
+          token: ${{ secrets.SCORE_BOT_PAT }}
 
       - name: Debug PAT
         run: |
