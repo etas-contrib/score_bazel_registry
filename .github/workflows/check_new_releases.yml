@@ -33,8 +33,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
-        with:
-          token: ${{ secrets.SCORE_BOT_PAT }}
+        # with:
+        #   token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Debug PAT
         run: |
@@ -93,7 +93,7 @@ jobs:
           git push -u origin "$BRANCH"
 
         env:
-          GH_TOKEN: ${{ secrets.SCORE_BOT_PAT }}   # PAT belongs to eclipse-score-bot
+          # GH_TOKEN: ${{ secrets.SCORE_BOT_PAT }}   # PAT belongs to eclipse-score-bot
           BRANCH: bot/modules-update
           PR_BASE: main
           PR_TITLE: "chore: modules update"
