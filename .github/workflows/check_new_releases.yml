@@ -83,7 +83,7 @@ jobs:
 
       - name: Create branch, push, and open PR
         run: |
-          set -euo pipefail
+          set -euox pipefail
           git switch -C "$BRANCH"
 
           # Force origin to use the PAT
@@ -92,8 +92,15 @@ jobs:
           # Push the branch (create or update)
           git push -u origin "$BRANCH"
 
+          gh pr create \
+          --repo "${{ github.repository }}" \
+          --base "$PR_BASE" \
+          --head "$BRANCH" \
+          --title "$PR_TITLE" \
+          --body  "$PR_BODY"
+
         env:
-          # GH_TOKEN: ${{ secrets.SCORE_BOT_PAT }}   # PAT belongs to eclipse-score-bot
+          GH_TOKEN: ${{ secrets.SCORE_BOT_PAT }}   # PAT belongs to eclipse-score-bot
           BRANCH: bot/modules-update
           PR_BASE: main
           PR_TITLE: "chore: modules update"
