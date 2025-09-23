@@ -25,11 +25,6 @@ jobs:
   check-updates:
     runs-on: ubuntu-latest
 
-    # permissions must be set even when using a PAT
-    permissions:
-      contents: write
-      pull-requests: write
-
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
@@ -53,8 +48,11 @@ jobs:
             Please review and merge if everything looks good.
           commit-message: Update modules
           branch: bot/modules-update
-        env:
           # Use token with write access.
-          # Using a different token than GITHUB_TOKEN is also required,
+          # Using a different token than GITHUB_TOKEN is required,
           # in order to trigger subsequent PR-workflows.
+          token: ${{ secrets.SCORE_BOT_PAT }}
+        env:
+          # It's not perfectly clear whether we need to set token or GITHUB_TOKEN here,
+          # but it seems to work only when both are set to the PAT.
           GITHUB_TOKEN: ${{ secrets.SCORE_BOT_PAT }}
