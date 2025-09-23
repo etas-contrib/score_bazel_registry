@@ -69,24 +69,33 @@ jobs:
           pip install -r tools/requirements.txt
           python scripts/check_and_update_modules.py
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          title: Update modules
-          author: eclipse-score-bot <187756813+eclipse-score-bot@users.noreply.github.com>
-          committer: eclipse-score-bot <187756813+eclipse-score-bot@users.noreply.github.com>
-          body: |
-            This PR updates the modules to their latest versions.
-            Please review and merge if everything looks good.
-          commit-message: Update modules
-          branch: bot/modules-update
-          # Target main branch, regardless of where this workflow was triggered from.
-          base: main
-          # Use token with write access.
-          # Using a different token than GITHUB_TOKEN is required,
-          # in order to trigger subsequent PR-workflows.
-          token: ${{ secrets.SCORE_BOT_PAT }}
+
+      - name: Configure git author
+        run: |
+          git config user.name "eclipse-score-bot"
+          git config user.email "eclipse-score-bot@users.noreply.github.com"
+
+      - name: Commit changes
+        run: |
+          git add -A
+          git commit -m "chore: modules update"
+        id: commit
+
+      - name: Create branch, push, and open PR
+        run: |
+          set -euo pipefail
+          git switch -C "$BRANCH"
+
+          # Force origin to use the PAT
+          # git remote set-url origin "https://x-oauth-basic:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+
+          # Push the branch (create or update)
+          git push -u origin "$BRANCH"
+
         env:
-          # It's not perfectly clear whether we need to set token or GITHUB_TOKEN here,
-          # but it seems to work only when both are set to the PAT.
-          GITHUB_TOKEN: ${{ secrets.SCORE_BOT_PAT }}
+          GH_TOKEN: ${{ secrets.SCORE_BOT_PAT }}   # PAT belongs to eclipse-score-bot
+          BRANCH: bot/modules-update
+          PR_BASE: main
+          PR_TITLE: "chore: modules update"
+          PR_BODY: "Automated update via gh CLI (from fork)."
+ 
