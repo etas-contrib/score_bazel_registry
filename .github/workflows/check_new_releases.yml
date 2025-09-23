@@ -33,6 +33,9 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
+        env:
+          # For pushing and PR we want to use a PAT with write access.
+          persist-credentials: false
 
       - name: Debug PAT
         run: |
