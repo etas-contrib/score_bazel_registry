@@ -87,7 +87,7 @@ jobs:
           git switch -C "$BRANCH"
 
           # Force origin to use the PAT
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git remote set-url origin "https://github.com/${{ github.repository }}.git"
 
           # Push the branch (create or update)
           git push -u origin "$BRANCH"
