@@ -33,8 +33,8 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4.2.2
-        # with:
-        #   token: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          persist-credentials: false  # We will use a PAT instead
 
       - name: Debug PAT
         run: |
@@ -87,7 +87,7 @@ jobs:
           git switch -C "$BRANCH"
 
           # Force origin to use the PAT
-          git remote set-url origin "https://github.com/${{ github.repository }}.git"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git"
 
           # Push the branch (create or update)
           git push -u origin "$BRANCH"
